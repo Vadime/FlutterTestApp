@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertestapp/animation_processing.dart';
-import 'package:fluttertestapp/article_list.dart';
-import 'package:fluttertestapp/data_processing.dart';
-import 'package:fluttertestapp/image_processing.dart';
-import 'package:fluttertestapp/settings.dart';
+import 'package:fluttertestapp/animation_processing_page.dart';
+import 'package:fluttertestapp/article_list_page.dart';
+import 'package:fluttertestapp/data_processing_page.dart';
+import 'package:fluttertestapp/image_processing_page.dart';
+import 'package:fluttertestapp/settings_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

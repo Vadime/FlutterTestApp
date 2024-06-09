@@ -46,17 +46,15 @@ class AnimationProcessingPageState extends State<AnimationProcessingPage>
               AnimatedBuilder(
                 animation: _animation,
                 builder: (BuildContext context, Widget? child) {
-                  return Opacity(
-                    opacity: _animation.value,
-                    child: Container(
-                        width: 200,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius:
-                              BorderRadius.circular(_animation.value * 100),
-                        )),
-                  );
+                  return Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Color.lerp(
+                            Colors.blue, Colors.green, _animation.value),
+                        borderRadius:
+                            BorderRadius.circular(_animation.value * 100),
+                      ));
                 },
               ),
               const Spacer(),

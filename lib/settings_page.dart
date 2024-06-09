@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertestapp/data_input.dart';
+import 'package:fluttertestapp/data_input_screen.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});

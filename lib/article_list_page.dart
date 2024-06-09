@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertestapp/article_screen.dart';
+import 'package:fluttertestapp/models/article.dart';
 
 class ArticleListPage extends StatefulWidget {
   const ArticleListPage({super.key});
@@ -49,30 +51,32 @@ class _ArticleListPageState extends State<ArticleListPage> {
           physics: const ScrollPhysics(),
           itemCount: articles.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              leading: Image.asset(
-                articles[index].image,
-                width: 50,
-                height: 50,
-              ),
-              title: Text(articles[index].title),
-              subtitle: Text(articles[index].description),
-            );
+            return articleTile(article: articles[index]);
           },
         ),
       ],
     );
   }
-}
 
-class Article {
-  final String image;
-  final String title;
-  final String description;
-
-  const Article({
-    required this.image,
-    required this.title,
-    required this.description,
-  });
+  articleTile({required Article article}) => ListTile(
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            article.image,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
+        ),
+        title: Text(article.title),
+        subtitle: Text(article.description),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ArticleScreen(article: article),
+            ),
+          );
+        },
+      );
 }
