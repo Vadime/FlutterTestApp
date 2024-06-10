@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertestapp/article_screen.dart';
 import 'package:fluttertestapp/models/article.dart';
@@ -14,24 +17,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
 
   @override
   void initState() {
-    articles = [
-      const Article(
-        image: 'assets/images/test1.jpg',
-        title: 'Article 1',
-        description: 'This is the first article.',
-      ),
-      const Article(
-        image: 'assets/images/test2.jpg',
-        title: 'Article 2',
-        description: 'This is the second article.',
-      ),
-      const Article(
-        image: 'assets/images/test3.png',
-        title: 'Article 3',
-        description: 'This is the third article.',
-      ),
-      // Add more articles here
-    ];
+    articles = generateArticleList(100);
     super.initState();
   }
 
@@ -58,25 +44,49 @@ class _ArticleListPageState extends State<ArticleListPage> {
     );
   }
 
-  articleTile({required Article article}) => ListTile(
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Image.asset(
-            article.image,
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
+  articleTile({required Article article}) => Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+        child: ListTile(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-        ),
-        title: Text(article.title),
-        subtitle: Text(article.description),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ArticleScreen(article: article),
+          tileColor: Colors.white,
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              article.image,
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
             ),
-          );
-        },
+          ),
+          title: Text(article.title),
+          subtitle: Text(article.description),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ArticleScreen(article: article),
+              ),
+            );
+          },
+        ),
       );
+
+  List<Article> generateArticleList(int count) {
+    List<Article> articles = [];
+
+    // use faker package to generate random data
+    for (int i = 0; i < count; i++) {
+      articles.add(
+        Article(
+          image: 'assets/images/test${Random().nextInt(3) + 1}.jpg',
+          title: faker.lorem.sentence(),
+          description: faker.lorem.sentences(3).join(' '),
+        ),
+      );
+    }
+
+    return articles;
+  }
 }

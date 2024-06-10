@@ -1,5 +1,8 @@
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertestapp/models/user.dart';
+
+import 'utils/traces.dart';
 
 class DataProcessingPage extends StatefulWidget {
   const DataProcessingPage({super.key});
@@ -34,13 +37,12 @@ class DataProcessingPageState extends State<DataProcessingPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        // Filter the data list based on the search value
                         setState(() {
                           if (value.isEmpty) {
                             _filteredDataList = _dataList;
@@ -100,20 +102,21 @@ class DataProcessingPageState extends State<DataProcessingPage> {
             ),
 
             // Add UI elements for data filtering and sorting here
-
             Expanded(
-              child: ListView.builder(
-                itemCount: _filteredDataList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(_filteredDataList[index].imageUrl),
-                    ),
-                    subtitle: Text(_filteredDataList[index].jobTitle),
-                    title: Text(_filteredDataList[index].name),
-                  );
-                },
+              child: Card(
+                child: ListView.builder(
+                  itemCount: _filteredDataList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(_filteredDataList[index].imageUrl),
+                      ),
+                      subtitle: Text(_filteredDataList[index].jobTitle),
+                      title: Text(_filteredDataList[index].name),
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -123,6 +126,7 @@ class DataProcessingPageState extends State<DataProcessingPage> {
   }
 
   List<User> generateUsers(int count) {
+    Traces.userGenTrace.start();
     var faker = Faker();
     List<User> users = [];
 
@@ -147,34 +151,9 @@ class DataProcessingPageState extends State<DataProcessingPage> {
         ),
       );
     }
+
+    Traces.userGenTrace.stop();
+
     return users;
   }
-}
-
-class User {
-  // Define your data model here
-
-  final String name;
-  final int age;
-  final String email;
-  final String phone;
-  final String address;
-  final String company;
-  final String jobTitle;
-  final String imageUrl;
-  final String bio;
-  final DateTime dateOfBirth;
-
-  User({
-    required this.name,
-    required this.age,
-    required this.email,
-    required this.phone,
-    required this.address,
-    required this.company,
-    required this.jobTitle,
-    required this.imageUrl,
-    required this.bio,
-    required this.dateOfBirth,
-  });
 }

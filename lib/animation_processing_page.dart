@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:rive/rive.dart';
 
 class AnimationProcessingPage extends StatefulWidget {
   const AnimationProcessingPage({super.key});
@@ -9,24 +11,36 @@ class AnimationProcessingPage extends StatefulWidget {
 
 class AnimationProcessingPageState extends State<AnimationProcessingPage>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
+  Artboard? _artboard;
+  RiveAnimationController? _controller;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
+    rootBundle.load('assets/animations/soarus.riv').then(
+      (data) async {
+        final file = RiveFile.import(data);
+        final artboard = file.mainArtboard;
+        artboard.addController(_controller = SimpleAnimation('Run'));
+        setState(() => _artboard = artboard);
+      },
     );
-    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
-    _animationController.forward();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _controller?.dispose();
     super.dispose();
+  }
+
+  void _togglePlay() {
+    setState(() {
+      if (_controller?.isActive ?? false) {
+        _controller?.isActive = false;
+      } else {
+        _controller?.isActive = true;
+      }
+    });
   }
 
   @override
@@ -42,31 +56,18 @@ class AnimationProcessingPageState extends State<AnimationProcessingPage>
                 'Animation Processing',
                 style: Theme.of(context).textTheme.displayLarge,
               ),
-              const Spacer(),
-              AnimatedBuilder(
-                animation: _animation,
-                builder: (BuildContext context, Widget? child) {
-                  return Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Color.lerp(
-                            Colors.blue, Colors.green, _animation.value),
-                        borderRadius:
-                            BorderRadius.circular(_animation.value * 100),
-                      ));
-                },
+              Expanded(
+                child: Center(
+                  child: _artboard == null
+                      ? const SizedBox()
+                      : Rive(
+                          artboard: _artboard!,
+                          fit: BoxFit.contain,
+                        ),
+                ),
               ),
-              const Spacer(),
               ElevatedButton(
-                onPressed: () {
-                  if (_animationController.status ==
-                      AnimationStatus.completed) {
-                    _animationController.reverse();
-                  } else {
-                    _animationController.forward();
-                  }
-                },
+                onPressed: _togglePlay,
                 child: const Text('Animate'),
               )
             ],
